@@ -25,6 +25,16 @@ class Matrix
         
         std::string str_m;
         
+        unsigned int nbColumns_m;
+        
+        unsigned int nbLines_m;
+        
+        typedef enum
+        {
+            ADD_SUB,
+            MUL_DIV
+        }matrixOperation_t;
+        
     public:
         /// @brief  Default constructor
         Matrix(void);
@@ -45,13 +55,18 @@ class Matrix
         Matrix& operator=(Matrix const& matrix);
 
         /// @brief  Assignment operator
-        Matrix& operator=(double n);
+//        Matrix& operator=(double n);
         
         /// @brief  += operator
         Matrix& operator+=(const Matrix& matrix);
+        Matrix& operator+=(const calculType_t& n);
         
         /// @brief  -= operator
         Matrix& operator-=(const Matrix& matrix);
+        Matrix& operator-=(const calculType_t& n);
+
+        /// @brief  - operator (unary)
+        Matrix& operator-(void);
         
         /// @brief  *= operator
         Matrix& operator*=(const Matrix& matrix);
@@ -72,13 +87,19 @@ class Matrix
         /// @brief  Initialize from a string
         /// @param  str String
         void init(const std::string& str);
+        
+        void checkDimensions(const Matrix& matrix, matrixOperation_t op);
 };
 
 /// @brief  += operator
 Matrix operator+(Matrix const& matrix1, Matrix const& matrix2);
+Matrix operator+(Matrix const& matrix1, const calculType_t& n);
+Matrix operator+(const calculType_t& n, Matrix const& matrix2);
 
 /// @brief  -= operator
 Matrix operator-(Matrix const& matrix1, Matrix const& matrix2);
+Matrix operator-(Matrix const& matrix1, const calculType_t& n);
+Matrix operator-(const calculType_t& n, Matrix const& matrix2);
 
 /// @brief  *= operator
 Matrix operator*(Matrix const& matrix1, Matrix const& matrix2);
