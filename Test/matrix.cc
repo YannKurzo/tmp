@@ -17,6 +17,8 @@
 
 using namespace std;
 
+#define THROW(str) throw runtime_error(str);
+
 Matrix::Matrix(void)
 {
     init("0");
@@ -44,31 +46,59 @@ Matrix::Matrix(Matrix const& matrix)
 
 void Matrix::init(const std::string& str)
 {
+    // Init string
     n_m = vector<vector<calculType_t> >(0);
     str_m = str.substr(1, str.size()-2);
     
+    // Get number of lines
     unsigned int nbLines = ::count(str_m.begin(), str_m.end(), ';')+1;
+    
+    // Variable for checking validity
+    vector<unsigned int> nbNumbersPerLine = vector<unsigned int>(nbLines);
+    unsigned int nbNumbers = 0;
+    
+    // Init comma
     unsigned int commaFound = -1, commaBase = 0;
     
     for(unsigned int i=0;i<nbLines;++i)
     {
+        // Get line by line
         commaFound = str_m.find(";", commaFound+1);
-        unsigned int spaceFound = -1, base = 0;
-        n_m.push_back(vector<calculType_t>(0));
         string line = str_m.substr(commaBase, commaFound-commaBase);
         commaBase = commaFound+1;
         
+        // Init space
+        unsigned int spaceFound = -1, base = 0;
+        nbNumbers = 0;
+        
+        // Init first line
+        n_m.push_back(vector<calculType_t>(0));
+        
         for(unsigned int j=0;j<::count(line.begin(), line.end(), ' ')+1;++j)
         {
+            // Get number by number
             spaceFound = line.find(" ", spaceFound+1);
             string number = line.substr(base, spaceFound-base);
+            base = spaceFound+1;
             
+            // Check if it is really a number
             if(number.size() > 0)
             {
                 n_m.at(i).push_back(::atoi(number.c_str()));
+                ++nbNumbers;
             }
-            
-            base = spaceFound+1;
+        }
+        
+        // Update number of numbers
+        nbNumbersPerLine.at(i) = nbNumbers;
+    }
+    
+    // Checking matrix validity
+    for(unsigned int i=0;i<nbLines;++i)
+    {
+        if(nbNumbers != nbNumbersPerLine.at(i))
+        {
+            THROW("Inconsistent matrix!");
         }
     }
 }
