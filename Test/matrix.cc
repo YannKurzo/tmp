@@ -332,10 +332,29 @@ Matrix& Matrix::operator/=(const Matrix& matrix)
     return *this;
 }
 
+Matrix& Matrix::operator/=(const calculType_t& n)
+{
+    for(unsigned int i=0;i<nbLines_m;++i)
+    {
+        for(unsigned int j=0;j<nbColumns_m;++j)
+        {
+            n_m.at(i).at(j) /= n;
+        }
+    }
+    return *this;
+}
+
 Matrix operator/(Matrix const& matrix1, Matrix const& matrix2)
 {
     Matrix result(matrix1);
     result /= matrix2;
+    return result;
+}
+
+Matrix operator/(Matrix const& matrix1, const calculType_t& n)
+{
+    Matrix result(matrix1);
+    result /= n;
     return result;
 }
 

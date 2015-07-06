@@ -14,7 +14,7 @@ int main (void)
         Matrix m2 = Matrix("[2]");
         calculType_t d(2.);
         // m1 *= d;
-        cout << d * m1;
+        cout << m1 / d;
     }
     catch(exception const &e)
     {
