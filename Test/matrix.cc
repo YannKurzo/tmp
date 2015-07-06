@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <stdexcept>
 
 using namespace std;
 
@@ -203,31 +204,26 @@ Matrix operator+(const calculType_t& n, Matrix const& matrix2)
 
 Matrix& Matrix::operator-=(const Matrix& matrix)
 {
-    for(unsigned int i=0;i<nbLines_m;++i)
-    {
-        for(unsigned int j=0;j<nbColumns_m;++j)
-        {
-            n_m.at(i).at(j) -= matrix.n_m.at(i).at(j);
-        }
-    }
+    Matrix tmp(matrix);
+    *this += -tmp;
     return *this;
 }
 
 Matrix& Matrix::operator-=(const calculType_t& n)
 {
-    for(unsigned int i=0;i<nbLines_m;++i)
-    {
-        for(unsigned int j=0;j<nbColumns_m;++j)
-        {
-            n_m.at(i).at(j) -= n;
-        }
-    }
+    *this += -n;
     return *this;
 }
 
 Matrix& Matrix::operator-(void)
 {
-    *this = 0 - *this;
+    for(unsigned int i=0;i<nbLines_m;++i)
+    {
+        for(unsigned int j=0;j<nbColumns_m;++j)
+        {
+            n_m.at(i).at(j) = calculType_t(0.) - n_m.at(i).at(j);
+        }
+    }
     return *this;
 }
 
@@ -247,8 +243,9 @@ Matrix operator-(Matrix const& matrix1, const calculType_t& n)
 
 Matrix operator-(const calculType_t& n, Matrix const& matrix2)
 {
-    /// PROBLEM
-    return matrix2 - n;
+    Matrix result(matrix2);
+    result = n + -result;
+    return result;
 }
 
 Matrix& Matrix::operator*=(const Matrix& matrix)
