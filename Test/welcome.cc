@@ -10,10 +10,11 @@ int main (void)
 {
     try
     {
-        Matrix m1 = Matrix("[1 2 3]");
-        Matrix m2 = Matrix("[2 4 6]");
+        Matrix m1 = Matrix("[1;3;5]");
+        Matrix m2 = Matrix("[2]");
         calculType_t d(2.);
-        cout << d - m1;
+        // m1 *= d;
+        cout << d * m1;
     }
     catch(exception const &e)
     {

@@ -39,6 +39,9 @@ class Matrix
         /// @brief  Default constructor
         Matrix(void);
         
+        /// @brief  Constructor with dimensions
+        Matrix(unsigned int nbLines, unsigned int nbColumns);
+        
         /// @brief  Constructor from a string
         Matrix(const char *str);
         
@@ -55,7 +58,7 @@ class Matrix
         Matrix& operator=(Matrix const& matrix);
 
         /// @brief  Assignment operator
-//        Matrix& operator=(double n);
+        // Matrix& operator=(const calculType_t& n);
         
         /// @brief  += operator
         Matrix& operator+=(const Matrix& matrix);
@@ -70,6 +73,7 @@ class Matrix
         
         /// @brief  *= operator
         Matrix& operator*=(const Matrix& matrix);
+        Matrix& operator*=(const calculType_t& n);
         
         /// @brief  /= operator
         Matrix& operator/=(const Matrix& matrix);
@@ -103,6 +107,8 @@ Matrix operator-(const calculType_t& n, Matrix const& matrix2);
 
 /// @brief  *= operator
 Matrix operator*(Matrix const& matrix1, Matrix const& matrix2);
+Matrix operator*(Matrix const& matrix1, const calculType_t& n);
+Matrix operator*(const calculType_t& n, Matrix const& matrix2);
 
 /// @brief  /= operator
 Matrix operator/(Matrix const& matrix1, Matrix const& matrix2);

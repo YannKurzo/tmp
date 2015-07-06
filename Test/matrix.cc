@@ -25,6 +25,24 @@ Matrix::Matrix(void)
     init("0");
 }
 
+Matrix::Matrix(unsigned int nbLines, unsigned int nbColumns)
+{
+    nbLines_m = nbLines;
+    nbColumns_m = nbColumns;
+    
+    n_m = vector<vector<calculType_t> >(nbLines_m);
+    
+    for(unsigned int i=0;i<nbLines_m;++i)
+    {
+        n_m.at(i) = vector<calculType_t>(nbColumns_m);
+        
+        for(unsigned int j=0;j<nbColumns_m;++j)
+        {
+            n_m.at(i).at(j) = calculType_t(0.);
+        }
+    }
+}
+
 Matrix::Matrix(const char *str)
 {
     init(string(str));
@@ -155,6 +173,13 @@ void Matrix::checkDimensions(const Matrix& matrix, matrixOperation_t op)
             THROW("Dimensions not correct!");
         }
     }
+    else if(op == MUL_DIV)
+    {
+        if(nbColumns_m != matrix.nbLines_m)
+        {
+            THROW("Dimensions not correct!");
+        }
+    }
 }
 
 Matrix& Matrix::operator+=(const Matrix& matrix)
@@ -250,7 +275,33 @@ Matrix operator-(const calculType_t& n, Matrix const& matrix2)
 
 Matrix& Matrix::operator*=(const Matrix& matrix)
 {
+    checkDimensions(matrix, MUL_DIV);
     
+    Matrix result = Matrix(nbLines_m, matrix.nbColumns_m);
+    
+    for(unsigned int i=0;i<nbLines_m;++i)
+    {
+        for(unsigned int j=0;j<matrix.nbColumns_m;++j)
+        {
+            for(unsigned int k=0;k<matrix.nbColumns_m;++k)
+            {
+                result.n_m.at(i).at(j) += n_m.at(i).at(k) * matrix.n_m.at(k).at(j);
+            }
+        }
+    }
+    *this = result;
+    return *this;
+}
+
+Matrix& Matrix::operator*=(const calculType_t& n)
+{
+    for(unsigned int i=0;i<nbLines_m;++i)
+    {
+        for(unsigned int j=0;j<nbColumns_m;++j)
+        {
+            n_m.at(i).at(j) *= n;
+        }
+    }
     return *this;
 }
 
@@ -258,6 +309,20 @@ Matrix operator*(Matrix const& matrix1, Matrix const& matrix2)
 {
     Matrix result(matrix1);
     result *= matrix2;
+    return result;
+}
+
+Matrix operator*(Matrix const& matrix1, const calculType_t& n)
+{
+    Matrix result(matrix1);
+    result *= n;
+    return result;
+}
+
+Matrix operator*(const calculType_t& n, Matrix const& matrix2)
+{
+    Matrix result(matrix2);
+    result *= n;
     return result;
 }
 
